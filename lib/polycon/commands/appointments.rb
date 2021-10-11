@@ -16,7 +16,13 @@ module Polycon
         ]
 
         def call(date:, professional:, name:, surname:, phone:, notes: nil)
-          warn "TODO: Implementar creación de un turno con fecha '#{date}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          prof = Polycon::Models::Professional.new(professional)
+          prof.save
+          appointment = Polycon::Models::Appointment.new(DateTime.parse(date), prof, name, surname, phone, notes)
+          appointment.save
+          puts "Se ha creado el turno: #{appointment}"
+        rescue DataManagement::Exceptions::RecordNotUnique
+          puts "¡Error! Ya existe un turno dado para esta fecha y profesional."
         end
       end
 
@@ -31,7 +37,9 @@ module Polycon
         ]
 
         def call(date:, professional:)
-          warn "TODO: Implementar detalles de un turno con fecha '#{date}' y profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          # prof = Polycon::Models::Professional.find(professional)
+          prof = Polycon::Models::Professional.new(professional)
+          puts Polycon::Models::Appointment.find(prof, DateTime.parse(date))
         end
       end
 
@@ -46,7 +54,9 @@ module Polycon
         ]
 
         def call(date:, professional:)
-          warn "TODO: Implementar borrado de un turno con fecha '#{date}' y profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          prof = Polycon::Models::Professional.find(professional)
+          Appointment.find(professional: prof, date: date).delete
+          puts "El turno con fecha #{date} del profesional #{prof.name} se ha cancelado con éxito."
         end
       end
 
@@ -56,11 +66,13 @@ module Polycon
         argument :professional, required: true, desc: 'Full name of the professional'
 
         example [
-          '"Alma Estevez" # Cancels all appointments for professional Alma Estevez',
+          '"Alma Estevez" # Cancels all appointments for professional Alma Estevez'
         ]
 
         def call(professional:)
-          warn "TODO: Implementar borrado de todos los turnos de la o el profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          prof = Polycon::Models::Professional.find(professional)
+          Appointment.filter(professional: prof).delete
+          puts "Se han cancelado los turnos del profesional #{prof.name}."
         end
       end
 
@@ -75,8 +87,9 @@ module Polycon
           '"Alma Estevez" --date="2021-09-16" # Lists appointments for Alma Estevez on the specified date'
         ]
 
-        def call(professional:)
-          warn "TODO: Implementar listado de turnos de la o el profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+        def call(professional:, date: nil)
+          prof = Polycon::Models::Professional.find(professional)
+          puts Polycon::Models::Appointment.filter(professional: prof, date: date)
         end
       end
 
@@ -92,7 +105,9 @@ module Polycon
         ]
 
         def call(old_date:, new_date:, professional:)
-          warn "TODO: Implementar cambio de fecha de turno con fecha '#{old_date}' para que pase a ser '#{new_date}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          prof = Polycon::Models::Professional.find(professional)
+          appointment = Polycon::Models::Appointment.find(professional: prof, date: old_date).reschedule(new_date)
+          puts "Se reprogramó el turno de #{old_date} a #{appointment.date}."
         end
       end
 
@@ -109,11 +124,13 @@ module Polycon
         example [
           '"2021-09-16 13:00" --professional="Alma Estevez" --name="New name" # Only changes the patient\'s name for the specified appointment. The rest of the information remains unchanged.',
           '"2021-09-16 13:00" --professional="Alma Estevez" --name="New name" --surname="New surname" # Changes the patient\'s name and surname for the specified appointment. The rest of the information remains unchanged.',
-          '"2021-09-16 13:00" --professional="Alma Estevez" --notes="Some notes for the appointment" # Only changes the notes for the specified appointment. The rest of the information remains unchanged.',
+          '"2021-09-16 13:00" --professional="Alma Estevez" --notes="Some notes for the appointment" # Only changes the notes for the specified appointment. The rest of the information remains unchanged.'
         ]
 
         def call(date:, professional:, **options)
-          warn "TODO: Implementar modificación de un turno de la o el profesional '#{professional}' con fecha '#{date}', para cambiarle la siguiente información: #{options}.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          prof = Polycon::Models::Professional.find(professional)
+          Polycon::Models::Appointment.find(professional: prof, date: date).update(**options)
+          puts "El turno con fecha #{date} del profesional #{prof.name} ha sido actualizado."
         end
       end
     end
