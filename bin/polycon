@@ -10,6 +10,7 @@ Bundler.require :default
 $LOAD_PATH.unshift(File.absolute_path("#{__dir__}/../lib"))
 
 # Requiere `lib/polycon.rb` como punto de partida para cargar todas las definiciones necesarias
+require 'data_management'
 require 'polycon'
 
 # Ejecuta, utilizando la gema dry-cli, los comandos que permiten utilizar la herramienta

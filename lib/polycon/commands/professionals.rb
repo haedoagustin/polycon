@@ -12,7 +12,12 @@ module Polycon
         ]
 
         def call(name:, **)
-          warn "TODO: Implementar creación de un o una profesional con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          p Polycon::Models::Professional.find(name)
+          # professional = Polycon::Models::Professional.new(name)
+          # professional.save
+          # puts "Profesional #{professional.name} creado con éxito"
+        rescue DataManagement::Exceptions::RecordNotUnique
+          puts "¡Error! Un profesional con ese nombre ya existe."
         end
       end
 
@@ -27,7 +32,8 @@ module Polycon
         ]
 
         def call(name: nil)
-          warn "TODO: Implementar borrado de la o el profesional con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          prof = Polycon::Models::Professional.find(name).delete
+          puts "Profesional #{prof.name} eliminado con éxito."
         end
       end
 
@@ -39,7 +45,7 @@ module Polycon
         ]
 
         def call(*)
-          warn "TODO: Implementar listado de profesionales.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          Polycon::Models::Professional.only("name").each(&:puts)
         end
       end
 
@@ -54,7 +60,10 @@ module Polycon
         ]
 
         def call(old_name:, new_name:, **)
-          warn "TODO: Implementar renombrado de profesionales con nombre '#{old_name}' para que pase a llamarse '#{new_name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          prof = Polycon::Models::Professional.find(old_name)
+          prof.name = new_name
+          prof.save
+          puts "¡Hecho! Ahora #{old_name} se llama #{prof.name}"
         end
       end
     end
