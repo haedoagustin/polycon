@@ -12,10 +12,8 @@ module Polycon
         ]
 
         def call(name:, **)
-          p Polycon::Models::Professional.find(name)
-          # professional = Polycon::Models::Professional.new(name)
-          # professional.save
-          # puts "Profesional #{professional.name} creado con éxito"
+          professional = Polycon::Models::Professional.create(name: name)
+          puts "Profesional #{professional.name} creado con éxito"
         rescue DataManagement::Exceptions::RecordNotUnique
           puts "¡Error! Un profesional con ese nombre ya existe."
         end
@@ -56,7 +54,7 @@ module Polycon
         argument :new_name, required: true, desc: 'New name for the professional'
 
         example [
-          '"Alna Esevez" "Alma Estevez" # Renames the professional "Alna Esevez" to "Alma Estevez"',
+          '"Alna Esevez" "Alma Estevez" # Renames the professional "Alna Esevez" to "Alma Estevez"'
         ]
 
         def call(old_name:, new_name:, **)

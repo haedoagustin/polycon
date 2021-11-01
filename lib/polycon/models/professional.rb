@@ -3,11 +3,10 @@ module Polycon
     class Professional < Polycon::Models::Model
       include Comparable
 
-      FILE = false
-
       attr_accessor :name
 
-      def initialize(name)
+      def initialize(name:)
+        super
         @name = name
       end
 

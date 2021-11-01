@@ -3,11 +3,11 @@ require 'date'
 module Polycon
   module Models
     class Appointment < Polycon::Models::Model
-
       attr_reader :date
       attr_accessor :professional, :name, :surname, :phone, :notes
 
       def initialize(date, professional, *patient, notes)
+        super
         @date = date
         @professional = professional
         @name, @surname, @phone = *patient
