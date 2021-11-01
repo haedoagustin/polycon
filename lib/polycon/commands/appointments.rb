@@ -15,7 +15,8 @@ module Polycon
           '"2021-09-16 13:00" --professional="Alma Estevez" --name=Carlos --surname=Carlosi --phone=2213334567'
         ]
 
-        def call(date:, professional:, name:, surname:, phone:, notes: nil)
+        def call(date:, options:)
+          professional, name, surname, phone, notes = *options
           prof = Polycon::Models::Professional.new(professional)
           prof.save
           appointment = Polycon::Models::Appointment.new(DateTime.parse(date), prof, name, surname, phone, notes)
@@ -33,7 +34,8 @@ module Polycon
         option :professional, required: true, desc: 'Full name of the professional'
 
         example [
-          '"2021-09-16 13:00" --professional="Alma Estevez" # Shows information for the appointment with Alma Estevez on the specified date and time'
+          '"2021-09-16 13:00" --professional="Alma Estevez" # Shows information for the appointment with Alma Estevez on
+          the specified date and time'
         ]
 
         def call(date:, professional:)
@@ -50,7 +52,8 @@ module Polycon
         option :professional, required: true, desc: 'Full name of the professional'
 
         example [
-          '"2021-09-16 13:00" --professional="Alma Estevez" # Cancels the appointment with Alma Estevez on the specified date and time'
+          '"2021-09-16 13:00" --professional="Alma Estevez" # Cancels the appointment with Alma Estevez
+          on the specified date and time'
         ]
 
         def call(date:, professional:)
@@ -101,7 +104,8 @@ module Polycon
         option :professional, required: true, desc: 'Full name of the professional'
 
         example [
-          '"2021-09-16 13:00" "2021-09-16 14:00" --professional="Alma Estevez" # Reschedules appointment on the first date for professional Alma Estevez to be now on the second date provided'
+          '"2021-09-16 13:00" "2021-09-16 14:00" --professional="Alma Estevez" # Reschedules appointment on the first
+          date for professional Alma Estevez to be now on the second date provided'
         ]
 
         def call(old_date:, new_date:, professional:)
@@ -122,9 +126,12 @@ module Polycon
         option :notes, required: false, desc: "Additional notes for appointment"
 
         example [
-          '"2021-09-16 13:00" --professional="Alma Estevez" --name="New name" # Only changes the patient\'s name for the specified appointment. The rest of the information remains unchanged.',
-          '"2021-09-16 13:00" --professional="Alma Estevez" --name="New name" --surname="New surname" # Changes the patient\'s name and surname for the specified appointment. The rest of the information remains unchanged.',
-          '"2021-09-16 13:00" --professional="Alma Estevez" --notes="Some notes for the appointment" # Only changes the notes for the specified appointment. The rest of the information remains unchanged.'
+          '"2021-09-16 13:00" --professional="Alma Estevez" --name="New name" # Only changes the patient\'s name for the
+           specified appointment. The rest of the information remains unchanged.',
+          '"2021-09-16 13:00" --professional="Alma Estevez" --name="New name" --surname="New surname" # Changes the
+           patient\'s name and surname for the specified appointment. The rest of the information remains unchanged.',
+          '"2021-09-16 13:00" --professional="Alma Estevez" --notes="Some notes for the appointment" # Only changes the
+           notes for the specified appointment. The rest of the information remains unchanged.'
         ]
 
         def call(date:, professional:, **options)

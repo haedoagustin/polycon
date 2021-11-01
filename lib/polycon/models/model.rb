@@ -3,10 +3,7 @@ module Polycon
     class Model
       include DataManagement::Mixins::FilePersistable
 
-      ROOT_DIR = File.join(Dir.home, ".polycon")
-      FILE = true
-
-      persist_root_dir self::ROOT_DIR
+      def initialize(*); end
 
       def file_name
         to_s
