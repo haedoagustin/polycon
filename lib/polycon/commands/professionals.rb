@@ -12,7 +12,7 @@ module Polycon
         ]
 
         def call(name:, **)
-          professional = Polycon::Models::Professional.create(name: name)
+          professional = Polycon::Models::Professional.create(name)
           puts "Profesional #{professional.name} creado con éxito"
         rescue DataManagement::Exceptions::RecordNotUnique
           puts "¡Error! Un profesional con ese nombre ya existe."
@@ -30,8 +30,13 @@ module Polycon
         ]
 
         def call(name: nil)
-          prof = Polycon::Models::Professional.find(name).delete
+          prof = Polycon::Models::Professional.find(name)
+          prof.destroy
           puts "Profesional #{prof.name} eliminado con éxito."
+        rescue DataManagement::Exceptions::RecordNotFound
+          puts "¡Error! No existe un profesional con ese nombre."
+        rescue DataManagement::Exceptions::RecordNotDeleted => e
+          puts "¡Error! No se pudo eliminar el profesional:  #{e.message}"
         end
       end
 
@@ -43,7 +48,7 @@ module Polycon
         ]
 
         def call(*)
-          Polycon::Models::Professional.only("name").each(&:puts)
+          puts Polycon::Models::Professional.only("name")
         end
       end
 
@@ -60,8 +65,9 @@ module Polycon
         def call(old_name:, new_name:, **)
           prof = Polycon::Models::Professional.find(old_name)
           prof.name = new_name
-          prof.save
           puts "¡Hecho! Ahora #{old_name} se llama #{prof.name}"
+        rescue DataManagement::Exceptions::RecordNotFound
+          puts "¡Error! No existe un profesional con ese nombre."
         end
       end
     end

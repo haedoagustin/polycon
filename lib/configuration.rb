@@ -1,4 +1,3 @@
 module Configuration
-  DEFAULT_DB_NAME = '.polycon'.freeze
-  FILE_CLASSES = ['Polycon::Models::Appointment'].freeze
+  DB_DIR = File.join(Dir.home, '.polycon').freeze
 end

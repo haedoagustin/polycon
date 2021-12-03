@@ -9,12 +9,16 @@ Bundler.require :default
 # Agrega el directorio `lib' del proyecto al load path de Ruby
 $LOAD_PATH.unshift(File.absolute_path("#{__dir__}/../lib"))
 
-require 'configuration'
-require 'data_management'
-
-DataManagement::Managers::FileManager.use!
-
 # Requiere `lib/polycon.rb` como punto de partida para cargar todas las definiciones necesarias
+require 'configuration'
+
+begin
+  Dir.mkdir(Configuration::DB_DIR)
+rescue Errno::EEXIST
+  nil
+end
+
+require 'data_management'
 require 'polycon'
 
 # Ejecuta, utilizando la gema dry-cli, los comandos que permiten utilizar la herramienta
